@@ -91,4 +91,5 @@ if __name__ == '__main__':
                 pass
             solution.reverse()
             expected_result = output.readline().strip()
-            assert(expected_result == str(solution))
+            if expected_result != str(solution):
+                print "expected: {0}, solution: {1}".format(expected_result, solution)
