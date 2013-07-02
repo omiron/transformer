@@ -9,7 +9,7 @@ def travers_cost_matrix(cost, idx, jdx):
         line = idx - 1
         column = jdx - 1
         """
-        modification operation
+        move operation
         """
         operation = (idx + 1, jdx + 1, 'M')
         if cost[idx - 1][jdx] < min:
@@ -22,12 +22,12 @@ def travers_cost_matrix(cost, idx, jdx):
             operation = (idx + 1, jdx + 1, 'D')
         if cost[idx][jdx - 1] < min:
             """
-            apend operation
+            insert operation
             """
             min = cost[idx][jdx - 1]
             line = idx
             column = jdx - 1
-            operation = (idx + 1, jdx + 1, 'A')
+            operation = (idx + 1, jdx + 1, 'I')
         if cost[idx][jdx] == min:
             """
             this is cost zero start_word[idx] == end_word[jdx]
