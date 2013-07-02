@@ -73,7 +73,7 @@ def calculate_cost(start_word, end_word):
     return cost
 
 if __name__ == '__main__':
-    with open('input.txt', 'r') as input, open('output.txt', 'r') as output:
+    with open('input.txt', 'r') as input, open('output.txt', 'w') as output:
         while True:
             line = input.readline().strip()
             if line == '':
@@ -90,6 +90,7 @@ if __name__ == '__main__':
             except StopIteration:
                 pass
             solution.reverse()
-            expected_result = output.readline().strip()
-            if expected_result != str(solution):
-                print "expected: {0}, solution: {1}".format(expected_result, solution)
+            #expected_result = output.readline().strip()
+            output.write("{0}\n".format(str(solution)))
+            #if expected_result != str(solution):
+            #    print "expected: {0}, solution: {1}".format(expected_result, solution)
