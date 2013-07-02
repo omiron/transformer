@@ -1,3 +1,18 @@
+
+
+class CostMatrix(object):
+    def __init__(self, cost, len_start_word, len_second_word):
+        self.cost = cost
+        #Observation: the cost is max between lenght start word, lenght second word
+        self.max_cost = max(len_start_word, len_second_word)
+
+    def get_cost_operation(self, idx, jdx):
+        if idx < 0 or jdx < 0:
+            return self.max_cost
+        else:
+            return self.cost[idx][jdx]
+
+
 def travers_cost_matrix(cost, idx, jdx):
     """
     travers the cost matrix and yield the operation for transform from i,j to
@@ -5,30 +20,30 @@ def travers_cost_matrix(cost, idx, jdx):
     operation jump is cost zero
     """
     while idx != 0 or jdx != 0:
-        min = cost[idx - 1][jdx - 1]
+        min = cost.get_cost_operation(idx - 1, jdx - 1)
         line = idx - 1
         column = jdx - 1
         """
         move operation
         """
         operation = (idx + 1, jdx + 1, 'M')
-        if cost[idx - 1][jdx] < min:
+        if cost.get_cost_operation(idx - 1, jdx) < min:
             """
             delete operation
             """
-            min = cost[idx - 1][jdx]
+            min = cost.get_cost_operation(idx - 1, jdx)
             line = idx - 1
             column = jdx
             operation = (idx + 1, jdx + 1, 'D')
-        if cost[idx][jdx - 1] < min:
+        if cost.get_cost_operation(idx, jdx - 1) < min:
             """
             insert operation
             """
-            min = cost[idx][jdx - 1]
+            min = cost.get_cost_operation(idx, jdx - 1)
             line = idx
             column = jdx - 1
             operation = (idx + 1, jdx + 1, 'I')
-        if cost[idx][jdx] == min:
+        if cost.get_cost_operation(idx, jdx) == min:
             """
             this is cost zero start_word[idx] == end_word[jdx]
             J from jump
@@ -48,8 +63,8 @@ def calculate_cost(start_word, end_word):
     sw = len(start_word) + 1
     ew = len(end_word) + 1
 
-    cost = [[0 for idx in range(ew)]
-            for jdx in range(sw)]
+    cost = [[0 for idx in range(ew)] for jdx in range(sw)]
+
     for idx in range(1, ew):
         cost[0][idx] = idx
 
@@ -79,7 +94,8 @@ if __name__ == '__main__':
             if line == '':
                 break
             start_word, end_word = line.split()
-            cost = calculate_cost(start_word, end_word)
+            cost = CostMatrix(calculate_cost(start_word, end_word),
+                              len(start_word), len(end_word))
             trv = travers_cost_matrix(cost, len(start_word), len(end_word))
             try:
                 solution = []
@@ -90,7 +106,4 @@ if __name__ == '__main__':
             except StopIteration:
                 pass
             solution.reverse()
-            #expected_result = output.readline().strip()
             output.write("{0}\n".format(str(solution)))
-            #if expected_result != str(solution):
-            #    print "expected: {0}, solution: {1}".format(expected_result, solution)
