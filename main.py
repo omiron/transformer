@@ -87,6 +87,44 @@ def calculate_cost(start_word, end_word):
                 cost[idx][jdx] = 1 + min
     return cost
 
+
+def print_human_format(operations, start_string, end_string):
+    print "printing all operations will be done to {0} to become {1}. Strings are index zero based !".format(
+        start_string, end_string)
+    """
+    modified_string keeps the tranformation of start_string in every step
+    """
+    modified_string = start_string
+    for operation in operations:
+        """
+        because strings and list are index zero base
+        """
+        idx_start_string = operation[0] - 1
+        idx_end_string = operation[1] - 1
+        transformation = operation[2]
+        if transformation == 'D':
+            list_modified_string = list(modified_string)
+            list_modified_string.pop(idx_start_string)
+            print "del {0}. {1} -> {2}".format(
+                start_string[idx_start_string],
+                modified_string, "".join(list_modified_string))
+        elif transformation == 'M':
+            list_modified_string = list(modified_string)
+            list_modified_string[idx_start_string] = end_string[idx_end_string]
+            print "move in position {0} character {1}.{2}->{3}".format(
+                idx_start_string, end_string[idx_end_string],
+                modified_string, "".join(list_modified_string))
+        elif transformation == 'I':
+            list_modified_string = list(modified_string)
+            list_modified_string.insert(idx_start_string + 1, end_string[idx_end_string])
+            print "insert before position {0} character {1}.{2}->{3}".format(
+                idx_start_string + 1, end_string[idx_end_string],
+                modified_string, "".join(list_modified_string))
+        else:
+            raise Exception("BAD arguments")
+        modified_string = "".join(list_modified_string)
+    print "---------------"
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as input, open('output.txt', 'w') as output:
         while True:
@@ -102,8 +140,8 @@ if __name__ == '__main__':
                 while True:
                     step = trv.next()
                     if step[2] != 'J':
-                        solution.append(step[2])
+                        solution.append(((step[0] - 1), (step[1] - 1), step[2]))
             except StopIteration:
                 pass
-            solution.reverse()
-            output.write("{0}\n".format(str(solution)))
+            output.write("{0} -- {1} -- {2}\n".format(str(solution), start_word, end_word))
+            print_human_format(solution, start_word, end_word)
